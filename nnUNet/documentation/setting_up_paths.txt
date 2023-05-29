@@ -1,0 +1,141 @@
+#设置路径
+
+nnU网络依赖于环境变量来了解原始数据、预处理数据和训练模型权重的存储位置。
+
+要使用nnU Net的全部功能，必须设置以下三个环境变量：
+
+1） nnUNet_raw_data_base：这是nnU Net查找原始数据并存储裁剪数据的地方。文件夹位于
+
+nnUNet_raw_data_base必须至少具有子文件夹nnUNet_raw_data，该子文件夹又为每个任务包含一个子文件夹。
+
+用户有责任将原始数据转换成适当的格式-然后由nnU Net处理
+
+其余的；-）有关所需原始数据格式的更多信息，请参见[此处]（dataset_conversion.md）。
+
+树结构示例：
+
+```
+
+nnUNet\u原始数据库/nnUNet\u原始数据/Task002\u心脏
+
+├── dataset.json
+
+├── imagesTr
+
+│   ├── la_003_0000.nii.gz
+
+│   ├── la_004_0000.nii.gz
+
+│   ├── ...
+
+├── 影像学家
+
+│   ├── la_001_0000.nii.gz
+
+│   ├── la_002_0000.nii.gz
+
+│   ├── ...
+
+└── 标签
+
+├── la_003.nii.gz
+
+├── la_004.nii.gz
+
+├── ...
+
+nnUNet_raw_data_base/nnUNet_raw_data/Task005_/
+
+├── dataset.json
+
+├── imagesTr
+
+│   ├── 前列腺_00 _0000.nii.gz
+
+│   ├── 前列腺_00 _0001.nii.gz
+
+│   ├── ...
+
+├── 影像学家
+
+│   ├── 前列腺癌03_0000.nii.gz
+
+│   ├── 前列腺_03_0001.nii.gz
+
+│   ├── ...
+
+└── 标签
+
+├── 前列腺_00.nii.gz
+
+├── 前列腺_01.nii.gz
+
+├── ...
+
+```
+
+2） nnUNet_preprocessed：这是将保存预处理数据的文件夹。数据也将从中读取
+
+在培训过程中删除此文件夹。因此，将其放置在具有低访问延迟和高性能的驱动器上非常重要
+
+吞吐量（常规sata或nvme SSD就足够了）。
+
+3） RESULTS_文件夹：指定nnU Net保存模型权重的位置。如果下载了预训练模型，则
+
+这将拯救他们。
+
+###如何设置环境变量
+
+（nnU Net是为Ubuntu/Linux开发的。以下指南适用于此操作系统，不适用于
+
+其他。我们不支持其他操作系统！）
+
+有几种方法可以做到这一点。最常见的方法是在.bashrc文件中设置路径，该文件位于
+
+在您的主目录中。对我来说，这个文件位于/home/fabian/.bashrc。您可以使用的任何文本编辑器打开它
+
+选择如果看不到该文件，可能是因为默认情况下该文件是隐藏的。您可以运行'ls-al/home/fabian'到
+
+确保你能看到它。在极少数情况下，它可能不存在，您可以简单地使用“touch/home/fabian/.bashrc”创建它。
+
+在文本编辑器中打开文件后，在底部添加以下行：
+
+```
+
+导出nnUNet_raw_data_base=“/media/fabian/nnUNet_raw”
+
+export nnUNet_preprocessed=“/media/fabian/nnUNet_preprocessed”
+
+导出结果文件夹=“/media/fabian/nnUNet\u trained\u models”
+
+```
+
+（当然，根据您的系统调整路径，并记住预处理的nnUNet_应位于SSD上！）
+
+然后保存并退出。要保存，请确保通过运行`source/home/fabian/.bashrc`来重新加载.bashrc。重新加载
+
+只需在保存更改之前已打开的终端会话上执行。你有新开的航站楼吗
+
+之后将设置这些路径。您可以通过键入“echo$RESULTS\u FOLDER”来验证路径设置是否正确
+
+它应该打印出正确的文件夹。
+
+###设置这些路径的另一种方法
+
+上述方法在系统上永久设置路径（直到从.bashrc中删除行）。如果你愿意
+
+要仅临时设置它们，可以在终端中运行导出命令：
+
+```
+
+导出nnUNet_raw_data_base=“/media/fabian/nnUNet_raw”
+
+export nnUNet_preprocessed=“/media/fabian/nnUNet_preprocessed”
+
+导出结果文件夹=“/media/fabian/nnUNet\u trained\u models”
+
+```
+
+这将仅为当前终端会话设置路径（如果关闭终端，变量将丢失）
+
+每次都需要重置）。
